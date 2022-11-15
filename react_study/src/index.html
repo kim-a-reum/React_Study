@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- body태그가 밑으로 내려가면 span 안생기넹... -->
+    <body>
+        
+        <div id="root"></div>
+    </body>
+<script crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- JSX쓰려면 text/babel이 필요해..!!! -->
+<script type="text/babel">
+    const root = document.getElementById("root")
+    // const span = React.createElement("span",{id : "mySpan", style : {color: "red"}}, "Hello,,,")
+    // 이 방식은 리액트 라이브러리를 이용하여 html태그를 만드는법 ! 
+    const Title = ()=>(
+       (<h3>Hello h3</h3>)
+    )
+    const Button = ()=>{
+        return(<button onClick={()=>console.log("React Component Button Pressed!")}>React Component button</button>)
+    }
+    // 리액트를 라이브러리로 불러와서 쓰는거니까 해보는 방식..!!! 
+    // 바닐라 JS에서는 html을 먼저 만들고, 그걸 자바스크립트로 가져왔지만
+    //  리액트는 자바스크립트로 시작해서 html을 업데이트하는 방식..! 거꾸로다 이자식앙 !~ 
+    const Container = ()=> (
+        <div>
+            <Title/>
+            <button>HTML button ! </button>
+            <Button/>
+        </div>
+    )
+    // 컴포넌트를 html 태그 쓰는 방식처럼 만들어서 사용해보자 
+    // 컴포넌트 첫 글자가 대문자여야 하는 이유는, React와 JSX는 html buttion 태그라고 생각할수도 있기 때문 ! 
+    ReactDOM.render(<Container/>,root)
+    
+</script>
+</html>
