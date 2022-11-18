@@ -4,10 +4,6 @@ import { MainSelectPage } from "./component/pageunits/main/Main.Container"
 import { OrderMenuPage } from "./component/pageunits/ordermenu/OrderMenu.Container"
 import { PayMenuPage } from "./component/pageunits/paymenu/PayMenu.Container"
 
-const Header = ()=>{
-  return (<>렌딩을 포함하는 Header </>)
-}
-
 
 
 
@@ -17,7 +13,7 @@ const NotFound = ()=>{
 function App() {
   return (
     <div className="App">
-      <Header/><br/>
+      <Header/>
       <BrowserRouter>
         <Routes>
             <Route path="/" element={<MainSelectPage/>}/>
