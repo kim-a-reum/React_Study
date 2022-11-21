@@ -1,13 +1,19 @@
-import { useEffect } from "react"
+import { useEffect } from "react";
+import DropdownSelect from "../../components/dropdown";
+import { Wrapper } from "../../units/Global";
 
-export const OrderMenuPage = ()=>{
-  useEffect(()=>{
-menuData()
-  },[])
-  const menuData = async()=>{
-await fetch("/data/coffeeData.json").then((res)=>res.json()).then((data)=>console.log(data))
-  }
-    return(<>메뉴 고르고 장바구니 담는 페이지</>)
-  }
-  
-  
+export const OrderMenuPage = () => {
+  useEffect(() => {
+    menuData();
+  }, []);
+  const menuData = async () => {
+    await fetch("/data/coffeeData.json")
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
+  return (
+    <Wrapper>
+      <DropdownSelect />
+    </Wrapper>
+  );
+};
