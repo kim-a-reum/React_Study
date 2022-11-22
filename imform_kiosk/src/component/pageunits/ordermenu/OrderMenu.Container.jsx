@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Button } from "../../components/buttons";
 import Dropdown from "../../components/dropdown";
 import Dropdown2 from "../../components/dropdown2";
-
 import { Wrapper } from "../../units/Global";
 
 const OptionWrapper = styled.div`
