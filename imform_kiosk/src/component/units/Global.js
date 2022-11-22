@@ -32,9 +32,11 @@ export const globalStyles = css`
 
 export const Wrapper = styled.div`
   width: 280px;
+  height: 550px;
+  margin-top: 5%;
   background-color: white;
   border: 3px solid #ffd400;
-  border-radius: 15px;
+  border-radius: 18px;
   text-align: center;
   font-family: "Mabinogi";
   color: darkgray;

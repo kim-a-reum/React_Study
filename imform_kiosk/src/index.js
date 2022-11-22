@@ -17,11 +17,14 @@ import ReactDOM from "react-dom";
 
 import App from "./App";
 import { globalStyles } from "./component/units/Global";
+import { RecoilRoot } from "recoil";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Global styles={globalStyles} />
-    <App />
+    <RecoilRoot>
+      <Global styles={globalStyles} />
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );

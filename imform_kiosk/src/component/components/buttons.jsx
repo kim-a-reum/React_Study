@@ -13,6 +13,6 @@ export const Button = styled.div`
     color: white;
   }
   font-family: "Mabinogi";
-
   color: darkgray;
+  margin-left: ${({ isOrder }) => (isOrder ? "150px" : "0px")};
 `;
