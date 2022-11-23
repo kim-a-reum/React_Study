@@ -1,17 +1,22 @@
 import styled from "@emotion/styled";
 import { useRef } from "react";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import Basket from "../../components/basket";
 
 import { Button } from "../../components/buttons";
 import Dropdown from "../../components/dropdown";
 import Dropdown2 from "../../components/dropdown2";
+import { deptRecoilState } from "../../store";
 import { Wrapper } from "../../units/Global";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const OptionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 45%;
-  border-bottom: 2px dotted lightgray;
+  height: 42%;
+  border-bottom: 1px dotted lightgray;
   margin-bottom: 10px;
 `;
 
@@ -30,16 +35,14 @@ const OptionTitle = styled.div`
   font-size: 18px;
   font-family: "Mabinogi";
 `;
-const BasketWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 40%;
-  border: 2px dotted lightgray;
-  margin-bottom: 10px;
-`;
 
 export const OrderMenuPage = () => {
   const [data, setData] = useState({});
+  const [defState] = useRecoilState(deptRecoilState);
+  const deptRefInput = useRef();
+  const nameRefInput = useRef();
+  const menuRefInput = useRef();
+  const quantityRefInput = useRef();
 
   useEffect(() => {
     menuData();
@@ -51,19 +54,46 @@ export const OrderMenuPage = () => {
       .then((data) => setData(data));
   };
 
-  const defRefInput = useRef();
-  const menuRefInput = useRef();
+  const onClickBasket = () => {
+    const baskets = JSON.parse(localStorage.getItem("baskets") || "[]");
+    baskets.push({
+      Dept: deptRefInput?.current?.innerText,
+      Name: nameRefInput?.current?.innerText,
+      Menu: menuRefInput?.current?.innerText,
+      Quantity: quantityRefInput?.current?.innerText,
+    });
+    localStorage.setItem("baskets", JSON.stringify(baskets));
+  };
+
+  const onClickFinsh = () => {
+    Swal.fire({
+      icon: "success",
+      iconColor: "#ffd400",
+      confirmButtonColor: "#ffd400",
+      width: "200px",
+      title: "주문 완료",
+    });
+    localStorage.removeItem("baskets");
+    const history = JSON.parse(localStorage.getItem("history") || "[]");
+    history.push({
+      Dept: deptRefInput?.current?.innerText,
+      Name: nameRefInput?.current?.innerText,
+      Menu: menuRefInput?.current?.innerText,
+      Quantity: quantityRefInput?.current?.innerText,
+    });
+    localStorage.setItem("history", JSON.stringify(history));
+  };
 
   return (
     <Wrapper>
       <OptionWrapper>
         <OptionBox>
           <OptionTitle>부서</OptionTitle>
-          <Dropdown data={data?.Department} refInput={defRefInput} />
+          <Dropdown data={data?.Department} refInput={deptRefInput} />
         </OptionBox>
         <OptionBox>
           <OptionTitle>이름</OptionTitle>
-          <Dropdown2 data={data?.["임원"]} />
+          <Dropdown2 data={data[defState]} refInput={nameRefInput} />
         </OptionBox>
         <OptionBox>
           <OptionTitle>품목</OptionTitle>
@@ -71,21 +101,18 @@ export const OrderMenuPage = () => {
         </OptionBox>
         <OptionBox>
           <OptionTitle>수량</OptionTitle>
-          <Dropdown />
+          <Dropdown data={data?.Quantity} refInput={quantityRefInput} />
         </OptionBox>
       </OptionWrapper>
-      <Button
-        isOrder={true}
-        onClick={() =>
-          console.log(
-            defRefInput?.current?.innerText,
-            menuRefInput?.current?.innerText
-          )
-        }
-      >
+      <Button isOrder={true} onClick={onClickBasket}>
         장바구니 담기
       </Button>
-      <BasketWrapper></BasketWrapper>
+      <Basket />
+      <Link to="/" style={{ textDecoration: "none" }}>
+        <Button isOrder={true} onClick={onClickFinsh}>
+          주문하기
+        </Button>
+      </Link>
     </Wrapper>
   );
 };

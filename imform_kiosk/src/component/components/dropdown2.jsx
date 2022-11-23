@@ -13,7 +13,7 @@ export default function Dropdown2(props) {
   const onClickOption = (el) => () => {
     setIsSelect(el);
   };
-  console.log(props);
+
   return (
     <>
       <Drop.SelectButton onClick={onClickSelectBtn}>

@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { deptRecoilState } from "../store";
 
 import * as Drop from "./dropdown.styled";
 
 export default function Dropdown(props) {
   const [isSelect, setIsSelect] = useState("선택하기");
   const [isActive, setIsActive] = useState(false);
+  const [, setState] = useRecoilState(deptRecoilState);
 
   const onClickSelectBtn = async () => {
     setIsActive((prev) => !prev);
@@ -12,6 +15,7 @@ export default function Dropdown(props) {
 
   const onClickOption = (el) => () => {
     setIsSelect(el);
+    setState(el);
   };
 
   return (
