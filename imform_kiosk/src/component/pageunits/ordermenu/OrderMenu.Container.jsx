@@ -10,7 +10,7 @@ import Dropdown2 from "../../components/dropdown2";
 import { deptRecoilState } from "../../store";
 import { Wrapper } from "../../units/Global";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useNavigate } from "react-router-dom";
 
 const OptionWrapper = styled.div`
   display: flex;
@@ -38,11 +38,13 @@ const OptionTitle = styled.div`
 
 export const OrderMenuPage = () => {
   const [data, setData] = useState({});
+  const [basket, setBasket] = useState({});
   const [defState] = useRecoilState(deptRecoilState);
   const deptRefInput = useRef();
   const nameRefInput = useRef();
   const menuRefInput = useRef();
   const quantityRefInput = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     menuData();
@@ -55,17 +57,45 @@ export const OrderMenuPage = () => {
   };
 
   const onClickBasket = () => {
-    const baskets = JSON.parse(localStorage.getItem("baskets") || "[]");
-    baskets.push({
-      Dept: deptRefInput?.current?.innerText,
-      Name: nameRefInput?.current?.innerText,
-      Menu: menuRefInput?.current?.innerText,
-      Quantity: quantityRefInput?.current?.innerText,
-    });
-    localStorage.setItem("baskets", JSON.stringify(baskets));
+    if (
+      deptRefInput?.current?.innerText !== "선택하기" &&
+      nameRefInput?.current?.innerText !== "선택하기" &&
+      menuRefInput?.current?.innerText !== "선택하기" &&
+      quantityRefInput?.current?.innerText !== "선택하기"
+    ) {
+      const baskets = JSON.parse(localStorage.getItem("baskets") || "[]");
+      baskets.push({
+        Dept: deptRefInput?.current?.innerText,
+        Name: nameRefInput?.current?.innerText,
+        Menu: menuRefInput?.current?.innerText,
+        Quantity: quantityRefInput?.current?.innerText,
+      });
+      localStorage.setItem("baskets", JSON.stringify(baskets));
+      setBasket((prev) => !prev);
+    } else {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#f86700",
+        confirmButtonColor: "#ffd400",
+        width: "200px",
+        title: "선택 오류",
+      });
+    }
   };
 
   const onClickFinsh = () => {
+    const baskets = JSON.parse(localStorage.getItem("baskets") || "[]");
+    console.log(baskets);
+    if (baskets[0] === undefined) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#f86700",
+        confirmButtonColor: "#ffd400",
+        width: "200px",
+        title: "장바구니 텅텅",
+      });
+      return;
+    }
     Swal.fire({
       icon: "success",
       iconColor: "#ffd400",
@@ -75,13 +105,8 @@ export const OrderMenuPage = () => {
     });
     localStorage.removeItem("baskets");
     const history = JSON.parse(localStorage.getItem("history") || "[]");
-    history.push({
-      Dept: deptRefInput?.current?.innerText,
-      Name: nameRefInput?.current?.innerText,
-      Menu: menuRefInput?.current?.innerText,
-      Quantity: quantityRefInput?.current?.innerText,
-    });
-    localStorage.setItem("history", JSON.stringify(history));
+    localStorage.setItem("history", JSON.stringify(history.concat(baskets)));
+    navigate("/");
   };
 
   return (
@@ -107,12 +132,12 @@ export const OrderMenuPage = () => {
       <Button isOrder={true} onClick={onClickBasket}>
         장바구니 담기
       </Button>
-      <Basket />
-      <Link to="/" style={{ textDecoration: "none" }}>
-        <Button isOrder={true} onClick={onClickFinsh}>
-          주문하기
-        </Button>
-      </Link>
+      <Basket basket={basket} />
+      {/* <Link to="/" style={{ textDecoration: "none" }}> */}
+      <Button isOrder={true} onClick={onClickFinsh}>
+        주문하기
+      </Button>
+      {/* </Link> */}
     </Wrapper>
   );
 };

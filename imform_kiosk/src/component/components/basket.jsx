@@ -32,14 +32,17 @@ const RowContents = styled.div`
 
 export default function Basket(props) {
   const [basketState, setbasketState] = useState([]);
+  const [historyState, setHistoryState] = useState([]);
   useEffect(() => {
     getBasketData();
-  }, [basketState]);
+  }, [props.basket]);
   const getBasketData = () => {
     const baskets = JSON.parse(localStorage.getItem("baskets") || "[]");
     setbasketState(baskets);
+    const histories = JSON.parse(localStorage.getItem("history") || "[]");
+    setHistoryState(histories);
   };
-  console.log(basketState);
+  console.log(historyState);
   return (
     <BasketWrapper isHistory={props.isHistory}>
       <Row>
@@ -48,14 +51,29 @@ export default function Basket(props) {
         <RowTitle>품목</RowTitle>
         <RowTitle>수량</RowTitle>
       </Row>
-      {basketState?.map((e, i) => (
-        <Row key={i}>
-          <RowContents>{e.Dept}</RowContents>
-          <RowContents>{e.Name}</RowContents>
-          <RowContents>{e.Menu}</RowContents>
-          <RowContents>{e.Quantity}</RowContents>
-        </Row>
-      ))}
+      {props.isHistory ? (
+        <>
+          {historyState?.map((e, i) => (
+            <Row key={i}>
+              <RowContents>{e.Dept}</RowContents>
+              <RowContents>{e.Name}</RowContents>
+              <RowContents>{e.Menu}</RowContents>
+              <RowContents>{e.Quantity}</RowContents>
+            </Row>
+          ))}
+        </>
+      ) : (
+        <>
+          {basketState?.map((e, i) => (
+            <Row key={i}>
+              <RowContents>{e.Dept}</RowContents>
+              <RowContents>{e.Name}</RowContents>
+              <RowContents>{e.Menu}</RowContents>
+              <RowContents>{e.Quantity}</RowContents>
+            </Row>
+          ))}
+        </>
+      )}
     </BasketWrapper>
   );
 }

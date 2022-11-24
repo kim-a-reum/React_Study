@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 import * as Drop from "./dropdown.styled";
 
@@ -7,13 +8,23 @@ export default function Dropdown2(props) {
   const [isActive, setIsActive] = useState(false);
 
   const onClickSelectBtn = async () => {
+    if (props.data === undefined) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#f86700",
+        confirmButtonColor: "#ffd400",
+        width: "200px",
+        title: "부서 선택",
+      });
+      return;
+    }
     setIsActive((prev) => !prev);
   };
 
   const onClickOption = (el) => () => {
     setIsSelect(el);
   };
-
+  console.log(props);
   return (
     <>
       <Drop.SelectButton onClick={onClickSelectBtn}>
