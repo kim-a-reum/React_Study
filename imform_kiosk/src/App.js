@@ -6,15 +6,16 @@ import { PayMenuPage } from "./component/pageunits/paymenu/PayMenu.Container";
 import { Header } from "./component/components/header";
 import styled from "@emotion/styled";
 
-const NotFound = () => {
-  return <>일치하지 않는 경로의 페이지 입니당</>;
-};
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
+const NotFound = () => {
+  return <>일치하지 않는 경로의 페이지 입니당</>;
+};
+
 function App() {
   return (
     <Wrapper className="App">

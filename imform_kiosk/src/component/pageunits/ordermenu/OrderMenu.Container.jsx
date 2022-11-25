@@ -1,40 +1,16 @@
-import styled from "@emotion/styled";
 import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Basket from "../../components/basket";
-
 import { Button } from "../../components/buttons";
 import Dropdown from "../../components/dropdown";
 import Dropdown2 from "../../components/dropdown2";
 import { deptRecoilState } from "../../store";
-import { Wrapper } from "../../units/Global";
+import { Wrapper } from "../../globalStyles/Global";
 import Swal from "sweetalert2";
-import { Link, useHistory, useNavigate } from "react-router-dom";
-
-const OptionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 42%;
-  border-bottom: 1px dotted lightgray;
-  margin-bottom: 10px;
-`;
-
-const OptionBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin-top: 20px;
-  width: 100%;
-`;
-const OptionTitle = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: darkgray;
-  font-size: 18px;
-  font-family: "Mabinogi";
-`;
+import { useNavigate } from "react-router-dom";
+import * as Order from "./OrderMenu.styled";
+import { getToday } from "../../components/getDate";
 
 export const OrderMenuPage = () => {
   const [data, setData] = useState({});
@@ -72,6 +48,10 @@ export const OrderMenuPage = () => {
       });
       localStorage.setItem("baskets", JSON.stringify(baskets));
       setBasket((prev) => !prev);
+      deptRefInput.current.innerText = "선택하기";
+      nameRefInput.current.innerText = "선택하기";
+      menuRefInput.current.innerText = "선택하기";
+      quantityRefInput.current.innerText = "선택하기";
     } else {
       Swal.fire({
         icon: "error",
@@ -85,7 +65,7 @@ export const OrderMenuPage = () => {
 
   const onClickFinsh = () => {
     const baskets = JSON.parse(localStorage.getItem("baskets") || "[]");
-    console.log(baskets);
+    const basketDate = getToday();
     if (baskets[0] === undefined) {
       Swal.fire({
         icon: "error",
@@ -104,6 +84,7 @@ export const OrderMenuPage = () => {
       title: "주문 완료",
     });
     localStorage.removeItem("baskets");
+    baskets.map((el) => (el.Date = basketDate));
     const history = JSON.parse(localStorage.getItem("history") || "[]");
     localStorage.setItem("history", JSON.stringify(history.concat(baskets)));
     navigate("/");
@@ -111,33 +92,31 @@ export const OrderMenuPage = () => {
 
   return (
     <Wrapper>
-      <OptionWrapper>
-        <OptionBox>
-          <OptionTitle>부서</OptionTitle>
+      <Order.OptionWrapper>
+        <Order.OptionBox>
+          <Order.OptionTitle>부서</Order.OptionTitle>
           <Dropdown data={data?.Department} refInput={deptRefInput} />
-        </OptionBox>
-        <OptionBox>
-          <OptionTitle>이름</OptionTitle>
+        </Order.OptionBox>
+        <Order.OptionBox>
+          <Order.OptionTitle>이름</Order.OptionTitle>
           <Dropdown2 data={data[defState]} refInput={nameRefInput} />
-        </OptionBox>
-        <OptionBox>
-          <OptionTitle>품목</OptionTitle>
+        </Order.OptionBox>
+        <Order.OptionBox>
+          <Order.OptionTitle>품목</Order.OptionTitle>
           <Dropdown data={data?.Coffee} refInput={menuRefInput} />
-        </OptionBox>
-        <OptionBox>
-          <OptionTitle>수량</OptionTitle>
+        </Order.OptionBox>
+        <Order.OptionBox>
+          <Order.OptionTitle>수량</Order.OptionTitle>
           <Dropdown data={data?.Quantity} refInput={quantityRefInput} />
-        </OptionBox>
-      </OptionWrapper>
+        </Order.OptionBox>
+      </Order.OptionWrapper>
       <Button isOrder={true} onClick={onClickBasket}>
         장바구니 담기
       </Button>
       <Basket basket={basket} />
-      {/* <Link to="/" style={{ textDecoration: "none" }}> */}
       <Button isOrder={true} onClick={onClickFinsh}>
         주문하기
       </Button>
-      {/* </Link> */}
     </Wrapper>
   );
 };
